@@ -1,0 +1,27 @@
+project: inventory-pipeline
+environments:
+  production:
+    hosts:
+      - host: 107.175.249.182  # Replace with your actual VPS IP or domain
+        user: root # or your SSH user
+        ssh_key: ~/.ssh/id_rsa # Path to your SSH key for server access
+    compose_files:
+      - docker-compose.yml
+    env_files:
+      - .env
+    directories:
+      - name: sftp/uploads
+        permission: 775
+      - name: sftp/config
+        permission: 775
+      - name: filebrowser
+        permission: 775
+    before_deploy:
+      - mkdir -p sftp/uploads sftp/config filebrowser
+      - touch filebrowser/database.db
+    after_deploy:
+      - docker-compose exec -T filebrowser filebrowser users add ${FILEBROWSER_ADMIN_USER} ${FILEBROWSER_ADMIN_PASS} --perm.admin || true
+    healthchecks:
+      - container: processor
+        url: http://localhost:${PROCESSOR_PORT}/status
+        status: 200
