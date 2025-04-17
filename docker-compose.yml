@@ -30,7 +30,7 @@ services:
     volumes:
       - ../files/pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5438:5432"
     restart: unless-stopped
 
   processor:
