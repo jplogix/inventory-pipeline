@@ -1,0 +1,53 @@
+services:
+  sftp:
+    image: atmoz/sftp
+    volumes:
+      - ./sftp/uploads:/home/ftpuser/uploads
+      - ./sftp/config:/etc/ssh
+    ports:
+      - "2222:22"
+    command: ftpuser:ftppassword:1001:100:uploads
+    restart: unless-stopped
+
+  filebrowser:
+    image: filebrowser/filebrowser
+    volumes:
+      - ./sftp/uploads:/srv
+      - ./filebrowser/database.db:/database.db
+      - ./filebrowser/config.json:/config.json
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      - sftp
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpassword
+      POSTGRES_DB: inventory
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  processor:
+    build: ./processor
+    volumes:
+      - ./sftp/uploads:/app/uploads
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=dbuser
+      - DB_PASSWORD=dbpassword
+      - DB_NAME=inventory
+      - WATCH_DIRECTORY=/app/uploads
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - sftp
+
+volumes:
+  pgdata:
