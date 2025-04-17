@@ -22,13 +22,13 @@ source .env
 
 # Start services
 echo "Starting services..."
-docker-compose up -d
+docker compose up -d
 
 # Setup Filebrowser admin user if specified
 if [ -n "$FILEBROWSER_ADMIN_USER" ] && [ -n "$FILEBROWSER_ADMIN_PASS" ]; then
   echo "Setting up Filebrowser admin user..."
   sleep 5  # Give filebrowser a chance to start
-  docker-compose exec -T filebrowser filebrowser users add $FILEBROWSER_ADMIN_USER $FILEBROWSER_ADMIN_PASS --perm.admin
+  docker compose exec -T filebrowser filebrowser users add $FILEBROWSER_ADMIN_USER $FILEBROWSER_ADMIN_PASS --perm.admin
 fi
 
 echo "Setup complete!"
