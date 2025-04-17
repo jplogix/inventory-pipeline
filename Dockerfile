@@ -1,4 +1,4 @@
-FROM node:23-alpine3.18-slim
+FROM node:23.0.1-alpine3.18
 
 WORKDIR /app
 
@@ -7,4 +7,4 @@ RUN npm install
 
 COPY . .
 
-CMD ["node", "index.js"]
+CMD ["node", "app.js"]
