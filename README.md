@@ -25,33 +25,30 @@ git clone https://github.com/yourusername/inventory-pipeline.git
 cd inventory-pipeline
 ```
 
-2. Create the required directories:
+2. Copy the example environment file and edit it with your settings:
 
 ```bash
-mkdir -p sftp/uploads sftp/config filebrowser
+cp .env.example .env
+nano .env
 ```
 
-3. Set up secure passwords in the docker-compose.yml file:
-   - Update the SFTP password (`ftpuser:ftppassword`)
-   - Update the PostgreSQL password
+3. Make sure to update the following in your .env file:
+   - Set secure passwords for SFTP, PostgreSQL, and Filebrowser
+   - Update the HOST_IP with your server's IP address or domain name
+   - Configure your timezone if needed
 
-4. Initialize the Filebrowser database:
+4. Run the setup script to create directories and start the services:
 
 ```bash
-touch filebrowser/database.db
+chmod +x setup.sh
+./setup.sh
 ```
 
-5. Start the services:
-
-```bash
-docker-compose up -d
-```
-
-6. Initialize the Filebrowser admin user:
-
-```bash
-docker-compose exec filebrowser filebrowser users add admin admin --perm.admin
-```
+The setup script will:
+- Create necessary directories
+- Initialize the Filebrowser database
+- Start all services using Docker Compose
+- Set up the Filebrowser admin user
 
 ### Ports and Access
 
