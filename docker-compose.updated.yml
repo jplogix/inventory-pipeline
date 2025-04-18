@@ -2,7 +2,7 @@ services:
   sftp:
     image: atmoz/sftp
     volumes:
-      - ../files/sftp/uploads:/home/finale/uploads
+      - /root/files/sftp/uploads:/home/finale/uploads
     ports:
       - "2222:22"
     command: finale:Inventory2025:1001:100:uploads
@@ -11,9 +11,9 @@ services:
   filebrowser:
     image: filebrowser/filebrowser
     volumes:
-      - ../files/sftp/uploads:/srv
-      - ../files/filebrowser/database.db:/database.db
-      - ../files/filebrowser/config.json:/config.json
+      - /root/files/sftp/uploads:/srv
+      - /root/files/filebrowser/database.db:/database.db
+      - /root/files/filebrowser/config.json:/config.json
     ports:
       - "8080:80"
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
       POSTGRES_PASSWORD: dbpassword
       POSTGRES_DB: inventory
     volumes:
-      - ../files/pgdata:/var/lib/postgresql/data
+      - /root/files/pgdata:/var/lib/postgresql/data
     ports:
       - "5438:5432"
     restart: unless-stopped
@@ -35,7 +35,7 @@ services:
   processor:
     build: ./processor
     volumes:
-      - ../files/sftp/uploads:/app/uploads
+      - /root/files/sftp/uploads:/app/uploads
     environment:
       - DB_HOST=postgres
       - DB_PORT=5432
